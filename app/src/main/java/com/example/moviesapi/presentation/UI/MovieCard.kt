@@ -41,15 +41,19 @@ fun MovieCard(
             .padding(Dimens.spacing16)
     ) {
         Box {
-            AsyncImage(
-                model = movie.poster,
-                contentDescription = movie.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .height(Dimens.spacing144)
-                    .width(Dimens.spacing107)
-                    .clip(RoundedCornerShape(Dimens.spacing16))
-            )
+            if (!movie.poster.isNullOrEmpty()) {
+                AsyncImage(
+                    model = movie.poster,
+                    contentDescription = movie.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .height(Dimens.spacing144)
+                        .width(Dimens.spacing107)
+                        .clip(RoundedCornerShape(Dimens.spacing16)),
+                    placeholder = painterResource(id = android.R.drawable.ic_menu_gallery),
+                    error = painterResource(id = android.R.drawable.ic_menu_gallery)
+                )
+            }
 
             if (movie.isFavorite) {
                 Box(
