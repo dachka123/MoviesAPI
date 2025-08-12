@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -27,6 +28,7 @@ fun MovieListCard(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF121212))
+            .statusBarsPadding()
     ) {
         Text(
             text = stringResource(R.string.movies),
@@ -34,7 +36,7 @@ fun MovieListCard(
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(start = Dimens.spacing24,top = Dimens.spacing34)
+                .padding(start = Dimens.spacing24)
         )
 
         LazyColumn(
