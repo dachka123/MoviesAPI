@@ -9,14 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import com.example.moviesapi.R
 import com.example.moviesapi.core.Dimens
 import com.example.moviesapi.domain.model.MoviesDomain
 
@@ -30,15 +25,6 @@ fun MovieListCard(
             .background(Color(0xFF121212))
             .statusBarsPadding()
     ) {
-        Text(
-            text = stringResource(R.string.movies),
-            color = Color.White,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(start = Dimens.spacing24)
-        )
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
