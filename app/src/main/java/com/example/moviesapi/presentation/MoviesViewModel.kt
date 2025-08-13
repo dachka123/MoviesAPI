@@ -41,4 +41,14 @@ class MoviesViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+
+    fun refreshMovies() {
+        state = state.copy(
+            isLoading = true,
+            error = "",
+            movies = emptyList()
+        )
+
+        getMovies()
+    }
 }

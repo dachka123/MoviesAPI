@@ -1,5 +1,6 @@
 package com.example.moviesapi.presentation.UI
 
+import android.R.attr.onClick
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,11 +61,12 @@ fun MoviesScreen(
             }
 
             state.error.isNotEmpty() -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = state.error, color = Color.Red)
-                }
+                ErrorScreen(
+                    onClick = {
+                        viewModel.refreshMovies()
+                    }
+                )
             }
-
             else -> {
                 MovieListCard(movies = state.movies)
             }

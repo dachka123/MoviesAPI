@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">MoviesAPI</string>
     <string name="movies">Movies</string>
+    <string name="information_is_not_loaded">ინფორმაცია ვერ ჩაიტვირთა</string>
+    <string name="try_again">სცადე თავიდან</string>
 </resources>
