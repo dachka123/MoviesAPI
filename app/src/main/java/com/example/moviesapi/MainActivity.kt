@@ -5,7 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
-import com.example.moviesapi.presentation.UI.MoviesScreen
+import androidx.navigation.compose.rememberNavController
+import com.example.moviesapi.presentation.UI.navigation.AppNavHost
 import com.example.moviesapi.ui.theme.MoviesAPITheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,8 +20,8 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             MoviesAPITheme {
-                MoviesScreen()
-            }
+                val navController = rememberNavController()
+                AppNavHost(navController = navController)            }
         }
     }
 }

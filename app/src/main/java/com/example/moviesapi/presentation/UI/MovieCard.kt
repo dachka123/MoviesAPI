@@ -1,6 +1,7 @@
 package com.example.moviesapi.presentation.UI
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,19 +33,22 @@ import com.example.moviesapi.domain.model.MoviesDomain
 @Composable
 fun MovieCard(
     movie: MoviesDomain,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (MoviesDomain) -> Unit
+
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(Color(0xFF121212))
+            .clickable { onClick(movie) }
             .padding(Dimens.spacing16)
     ) {
         Box {
             if (!movie.poster.isNullOrEmpty()) {
                 AsyncImage(
                     model = movie.poster,
-                    contentDescription = movie.title,
+                    contentDescription = movie.poster,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .height(Dimens.spacing144)

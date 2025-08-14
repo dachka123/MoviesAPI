@@ -18,11 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moviesapi.core.Dimens
+import com.example.moviesapi.domain.model.MoviesDomain
 import com.example.moviesapi.presentation.MoviesViewModel
 
 @Composable
 fun MoviesScreen(
-    viewModel: MoviesViewModel = hiltViewModel()
+    viewModel: MoviesViewModel = hiltViewModel(),
+    onMovieClick: (MoviesDomain) -> Unit
 ) {
     val state = viewModel.state
 
@@ -65,7 +67,10 @@ fun MoviesScreen(
                 )
             }
             else -> {
-                MovieListCard(movies = state.movies)
+                MovieListCard(
+                    movies = state.movies,
+                    onMovieClick = onMovieClick
+                )
             }
         }
     }

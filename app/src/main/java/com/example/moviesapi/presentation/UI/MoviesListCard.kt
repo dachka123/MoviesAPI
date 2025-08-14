@@ -17,7 +17,8 @@ import com.example.moviesapi.domain.model.MoviesDomain
 
 @Composable
 fun MovieListCard(
-    movies: List<MoviesDomain>
+    movies: List<MoviesDomain>,
+    onMovieClick: (MoviesDomain) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -33,7 +34,10 @@ fun MovieListCard(
             verticalArrangement = Arrangement.spacedBy(Dimens.spacing20)
         ) {
             items(movies) { movie ->
-                MovieCard(movie = movie)
+                MovieCard(
+                    movie = movie,
+                    onClick = onMovieClick
+                )
             }
         }
     }

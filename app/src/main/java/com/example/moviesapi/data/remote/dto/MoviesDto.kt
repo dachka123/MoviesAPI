@@ -19,7 +19,10 @@ fun MoviesDto.toMovies(): MoviesDomain{
         id = id,
         isFavorite = isFavorite,
         poster = poster,
-        title = title
+        title = title,
+        year = year,
+        genre = genre,
+        rating = rating,
     )
 }
 

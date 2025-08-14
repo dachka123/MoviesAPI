@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviesapi.core.Resource
+import com.example.moviesapi.domain.model.MoviesDomain
 import com.example.moviesapi.domain.use_case.GetMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -19,6 +20,13 @@ class MoviesViewModel @Inject constructor(
 
     var state by mutableStateOf(MoviesState())
         private set
+
+    private var _selectedMovie: MoviesDomain? = null
+    val selectedMovie: MoviesDomain? get() = _selectedMovie
+
+    fun selectMovie(movie: MoviesDomain) {
+        _selectedMovie = movie
+    }
 
     init {
         getMovies()
