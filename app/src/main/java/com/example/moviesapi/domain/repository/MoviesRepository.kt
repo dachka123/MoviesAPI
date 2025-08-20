@@ -1,8 +1,11 @@
 package com.example.moviesapi.domain.repository
 
-import com.example.moviesapi.data.remote.dto.MoviesDto
+import com.example.moviesapi.domain.model.MoviesDomain
+import kotlinx.coroutines.flow.Flow
 
 interface MoviesRepository {
 
-    suspend fun getMovies(): List<MoviesDto>
+    suspend fun getMovies(): Flow<List<MoviesDomain>>
+    suspend fun refreshMovies()
+
 }

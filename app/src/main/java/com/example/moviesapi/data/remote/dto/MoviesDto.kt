@@ -3,9 +3,9 @@ package com.example.moviesapi.data.remote.dto
 import com.example.moviesapi.domain.model.MoviesDomain
 
 data class MoviesDto(
+    val id: Int,
     val description: String,
     val genre: List<String>,
-    val id: Int,
     val isFavorite: Boolean,
     val poster: String,
     val rating: Double,

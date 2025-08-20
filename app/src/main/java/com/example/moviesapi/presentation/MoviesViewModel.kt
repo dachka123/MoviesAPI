@@ -32,15 +32,20 @@ class MoviesViewModel @Inject constructor(
         getMovies()
     }
 
-    private fun getMovies(){
-        getMoviesUseCase().onEach { result ->
+    private fun getMovies(fetchFromRemote: Boolean = false){
+        getMoviesUseCase(fetchFromRemote).onEach { result ->
             when(result){
                 is Resource.Success -> {
-                    state = MoviesState(movies = result.data ?: emptyList())
+                    state = state.copy(
+                        movies = result.data ?: emptyList(),
+                        isLoading = false,
+                        error = ""
+                    )
                 }
                 is Resource.Error -> {
-                    state = MoviesState(
-                        error = result.message ?: "error occured"
+                    state = state.copy(
+                        error = result.message ?: "An error occurred",
+                        isLoading = false
                     )
                 }
                 is Resource.Loading -> {
@@ -51,12 +56,6 @@ class MoviesViewModel @Inject constructor(
     }
 
     fun refreshMovies() {
-        state = state.copy(
-            isLoading = true,
-            error = "",
-            movies = emptyList()
-        )
-
-        getMovies()
+        getMovies(fetchFromRemote = true)
     }
 }

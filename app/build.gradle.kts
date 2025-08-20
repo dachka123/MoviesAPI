@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
-    //id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.ksp)
 
 }
@@ -44,6 +43,11 @@ android {
     buildFeatures {
         compose = true
     }
+    configurations.all {
+        resolutionStrategy {
+            force("org.jetbrains:annotations:23.0.0")
+        }
+    }
 }
 
 dependencies {
@@ -67,6 +71,16 @@ dependencies {
 
     implementation (libs.androidx.material.icons.extended)
 
+
+    implementation("androidx.room:room-runtime:2.7.2") {
+        exclude(group = "com.intellij", module = "annotations")
+    }
+    implementation("androidx.room:room-ktx:2.7.2") {
+        exclude(group = "com.intellij", module = "annotations")
+    }
+    ksp("androidx.room:room-compiler:2.7.2") {
+        exclude(group = "com.intellij", module = "annotations")
+    }
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
