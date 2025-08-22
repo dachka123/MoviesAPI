@@ -33,23 +33,34 @@ class MoviesViewModel @Inject constructor(
     }
 
     private fun getMovies(fetchFromRemote: Boolean = false){
+
+        if (fetchFromRemote && state.movies.isNotEmpty()) {
+            state = state.copy(isRefreshing = true)
+        }
+
         getMoviesUseCase(fetchFromRemote).onEach { result ->
             when(result){
                 is Resource.Success -> {
                     state = state.copy(
                         movies = result.data ?: emptyList(),
                         isLoading = false,
+                        isRefreshing = false,
                         error = ""
                     )
                 }
                 is Resource.Error -> {
                     state = state.copy(
                         error = result.message ?: "An error occurred",
-                        isLoading = false
+                        isLoading = false,
+                        isRefreshing = false,
+                        movies = result.data ?: state.movies
                     )
                 }
                 is Resource.Loading -> {
-                    state = MoviesState(isLoading = true)
+                    state = state.copy(
+                        isLoading = state.movies.isEmpty(),
+                        movies = result.data ?: state.movies
+                    )
                 }
             }
         }.launchIn(viewModelScope)
