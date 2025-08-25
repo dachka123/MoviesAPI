@@ -7,4 +7,6 @@ data class MoviesState (
     val isRefreshing: Boolean = false,
     val movies: List<MoviesDomain> = emptyList(),
     val error: String = "",
+    val searchQuery: String = "",
+    val filteredMovies: List<MoviesDomain> = emptyList()
 )

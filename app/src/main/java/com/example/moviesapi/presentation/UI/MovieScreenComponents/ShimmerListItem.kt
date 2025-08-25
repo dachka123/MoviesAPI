@@ -1,4 +1,4 @@
-package com.example.moviesapi.presentation.UI
+package com.example.moviesapi.presentation.UI.MovieScreenComponents
 
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable

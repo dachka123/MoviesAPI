@@ -26,6 +26,11 @@ class MoviesViewModel @Inject constructor(
 
     private var _selectedMovieId: Int? = null
 
+    val selectedMovie: MoviesDomain?
+        get() = _selectedMovieId?.let { id ->
+            state.movies.find { it.id == id }
+        }
+
     fun selectMovie(movie: MoviesDomain) {
         _selectedMovieId = movie.id
     }
@@ -43,25 +48,31 @@ class MoviesViewModel @Inject constructor(
         getMoviesUseCase(fetchFromRemote).onEach { result ->
             when(result){
                 is Resource.Success -> {
+                    val movies = result.data ?: emptyList()
                     state = state.copy(
                         movies = result.data ?: emptyList(),
                         isLoading = false,
                         isRefreshing = false,
-                        error = ""
+                        error = "",
+                        filteredMovies = filterMovies(movies, state.searchQuery)
                     )
                 }
                 is Resource.Error -> {
+                    val movies = result.data ?: state.movies
                     state = state.copy(
                         error = result.message ?: "An error occurred",
                         isLoading = false,
                         isRefreshing = false,
-                        movies = result.data ?: state.movies
+                        movies = result.data ?: state.movies,
+                        filteredMovies = filterMovies(movies, state.searchQuery)
                     )
                 }
                 is Resource.Loading -> {
+                    val movies = result.data ?: state.movies
                     state = state.copy(
                         isLoading = state.movies.isEmpty(),
-                        movies = result.data ?: state.movies
+                        movies = result.data ?: state.movies,
+                        filteredMovies = filterMovies(movies, state.searchQuery)
                     )
                 }
             }
@@ -87,7 +98,34 @@ class MoviesViewModel @Inject constructor(
             }
 
             //updating UI
-            state = state.copy(movies = updatedMovies)
+            state = state.copy(
+                movies = updatedMovies,
+                filteredMovies = filterMovies(updatedMovies, state.searchQuery)
+            )
+        }
+    }
+
+    fun updateSearchQuery(query: String) {
+        state = state.copy(
+            searchQuery = query,
+            filteredMovies = filterMovies(state.movies, query)
+        )
+    }
+
+    fun clearSearch() {
+        state = state.copy(
+            searchQuery = "",
+            filteredMovies = state.movies
+        )
+    }
+
+    private fun filterMovies(movies: List<MoviesDomain>, query: String): List<MoviesDomain> {
+        return if (query.isBlank()) {
+            movies
+        } else {
+            movies.filter { movie ->
+                movie.title.contains(query, ignoreCase = true)
+            }
         }
     }
 }

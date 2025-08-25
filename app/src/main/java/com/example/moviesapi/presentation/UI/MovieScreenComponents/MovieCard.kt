@@ -1,5 +1,6 @@
-package com.example.moviesapi.presentation.UI
+package com.example.moviesapi.presentation.UI.MovieScreenComponents
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -53,8 +54,8 @@ fun MovieCard(
                         .height(Dimens.spacing144)
                         .width(Dimens.spacing107)
                         .clip(RoundedCornerShape(Dimens.spacing16)),
-                    placeholder = painterResource(id = android.R.drawable.ic_menu_gallery),
-                    error = painterResource(id = android.R.drawable.ic_menu_gallery)
+                    placeholder = painterResource(id = R.drawable.ic_menu_gallery),
+                    error = painterResource(id = R.drawable.ic_menu_gallery)
                 )
             }
 
@@ -71,7 +72,7 @@ fun MovieCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(id = android.R.drawable.btn_star_big_on),
+                        painter = painterResource(id = R.drawable.btn_star_big_on),
                         contentDescription = "Favorite",
                         tint = Color.Yellow,
                         modifier = Modifier.size(Dimens.spacing13)
