@@ -35,7 +35,6 @@ fun MovieCard(
     movie: MoviesDomain,
     modifier: Modifier = Modifier,
     onClick: (MoviesDomain) -> Unit
-
 ) {
     Row(
         modifier = modifier
@@ -45,7 +44,7 @@ fun MovieCard(
             .padding(Dimens.spacing16)
     ) {
         Box {
-            if (!movie.poster.isNullOrEmpty()) {
+            if (movie.poster.isNotEmpty()) {
                 AsyncImage(
                     model = movie.poster,
                     contentDescription = movie.poster,

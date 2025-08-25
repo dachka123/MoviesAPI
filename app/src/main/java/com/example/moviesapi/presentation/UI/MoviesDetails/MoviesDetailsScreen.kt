@@ -48,7 +48,7 @@ fun MoviesDetailsScreen(
     onBack: () -> Unit,
     viewModel: MoviesViewModel
 ) {
-    val movie = viewModel.selectedMovie ?: viewModel.state.movies.find { it.id == movieId }
+    val movie = viewModel.state.movies.find { it.id == movieId }
 
     if (movie == null) {
         Text("Movie not found")
@@ -91,13 +91,19 @@ fun MoviesDetailsScreen(
                     .padding(horizontal = 60.dp)
             )
 
-            Icon(
-                painter = painterResource(id = R.drawable.btn_star_big_on),
-                contentDescription = "Favorite",
-                tint = if (movie.isFavorite) Color.Yellow else Color.White,
-                modifier = Modifier.size(Dimens.spacing20).align(Alignment.CenterEnd
+            IconButton(
+                onClick = {
+                    viewModel.toggleFavorite(movie.id, movie.isFavorite)
+                },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.btn_star_big_on),
+                    contentDescription = "Favorite",
+                    tint = if (movie.isFavorite) Color.Yellow else Color.White,
+                    modifier = Modifier.size(Dimens.spacing20)
                 )
-            )
+            }
         }
         Box {
             AsyncImage(

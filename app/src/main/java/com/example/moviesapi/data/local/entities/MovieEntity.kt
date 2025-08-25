@@ -12,7 +12,7 @@ data class MovieEntity(
     @PrimaryKey val id: Int,
     val description: String,
     val genre: List<String>,
-    val isFavorite: Boolean,
+    val isFavorite: Boolean = false,
     val poster: String,
     val rating: Double,
     val title: String,

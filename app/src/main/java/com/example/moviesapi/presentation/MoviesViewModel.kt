@@ -8,24 +8,26 @@ import androidx.lifecycle.viewModelScope
 import com.example.moviesapi.core.Resource
 import com.example.moviesapi.domain.model.MoviesDomain
 import com.example.moviesapi.domain.use_case.GetMoviesUseCase
+import com.example.moviesapi.domain.use_case.UpdateFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
-    private val getMoviesUseCase: GetMoviesUseCase
+    private val getMoviesUseCase: GetMoviesUseCase,
+    private val updateFavoriteUseCase: UpdateFavoriteUseCase
 ): ViewModel() {
 
     var state by mutableStateOf(MoviesState())
         private set
 
-    private var _selectedMovie: MoviesDomain? = null
-    val selectedMovie: MoviesDomain? get() = _selectedMovie
+    private var _selectedMovieId: Int? = null
 
     fun selectMovie(movie: MoviesDomain) {
-        _selectedMovie = movie
+        _selectedMovieId = movie.id
     }
 
     init {
@@ -68,5 +70,24 @@ class MoviesViewModel @Inject constructor(
 
     fun refreshMovies() {
         getMovies(fetchFromRemote = true)
+    }
+
+    fun toggleFavorite(movieId: Int, currentState: Boolean) {
+        viewModelScope.launch {
+            updateFavoriteUseCase(movieId, !currentState)
+
+            val updatedMovies = state.movies.map { movie ->
+                //if star clicked
+                if (movie.id == movieId) {
+                    movie.copy(isFavorite = !currentState)
+                } else {
+                    //else return movie unchanged
+                    movie
+                }
+            }
+
+            //updating UI
+            state = state.copy(movies = updatedMovies)
+        }
     }
 }

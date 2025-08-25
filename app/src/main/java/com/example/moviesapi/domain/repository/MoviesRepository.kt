@@ -7,5 +7,6 @@ interface MoviesRepository {
 
     suspend fun getMovies(): Flow<List<MoviesDomain>>
     suspend fun refreshMovies()
+    suspend fun updateFavorite(movieId: Int, isFav: Boolean)
 
 }
