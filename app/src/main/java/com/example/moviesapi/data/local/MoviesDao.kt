@@ -32,6 +32,6 @@ interface MoviesDao {
     @Query("SELECT * FROM movies WHERE id = :movieId")
     suspend fun getMovieById(movieId: Int): MovieEntity?
 
-    @Query("SELECT * FROM movies WHERE isFavorite = 1")
-    fun getFavoriteMovies(): Flow<List<MovieEntity>>
+    @Query("SELECT id FROM movies WHERE isFavorite = 1")
+    suspend fun getFavoriteMovies(): List<Int>
 }

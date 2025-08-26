@@ -10,6 +10,7 @@ import com.example.moviesapi.domain.model.MoviesDomain
 import com.example.moviesapi.domain.use_case.GetMoviesUseCase
 import com.example.moviesapi.domain.use_case.UpdateFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -25,6 +26,9 @@ class MoviesViewModel @Inject constructor(
         private set
 
     private var _selectedMovieId: Int? = null
+
+    private val activeFavoriteJobs = mutableMapOf<Int, Job>()
+
 
     val selectedMovie: MoviesDomain?
         get() = _selectedMovieId?.let { id ->
@@ -84,25 +88,48 @@ class MoviesViewModel @Inject constructor(
     }
 
     fun toggleFavorite(movieId: Int, currentState: Boolean) {
-        viewModelScope.launch {
-            updateFavoriteUseCase(movieId, !currentState)
+        activeFavoriteJobs[movieId]?.cancel()
 
-            val updatedMovies = state.movies.map { movie ->
-                //if star clicked
-                if (movie.id == movieId) {
-                    movie.copy(isFavorite = !currentState)
-                } else {
-                    //else return movie unchanged
-                    movie
-                }
+        val job = viewModelScope.launch {
+            try {
+                // update database first
+                updateFavoriteUseCase(movieId, !currentState)
+
+                // only modify the specific item
+                updateMovieFavoriteState(movieId, !currentState)
+
+            } catch (e: Exception) {
+                //  returning the optimistic update
+                updateMovieFavoriteState(movieId, currentState)
             }
-
-            //updating UI
-            state = state.copy(
-                movies = updatedMovies,
-                filteredMovies = filterMovies(updatedMovies, state.searchQuery)
-            )
         }
+
+        // store job reference for potential cancellation
+        activeFavoriteJobs[movieId] = job
+
+        // clean up completed job
+        job.invokeOnCompletion {
+            activeFavoriteJobs.remove(movieId)
+        }
+
+        // update UI immediately for better UX
+        updateMovieFavoriteState(movieId, !currentState)
+    }
+
+    private fun updateMovieFavoriteState(movieId: Int, newFavoriteState: Boolean) {
+        // find the index of the movie to update
+        val movieIndex = state.movies.indexOfFirst { it.id == movieId }
+        if (movieIndex == -1) return // movie not found
+
+        // create new list with only the changed item being copied
+        val updatedMovies = state.movies.toMutableList().apply {
+            this[movieIndex] = this[movieIndex].copy(isFavorite = newFavoriteState)
+        }
+
+        state = state.copy(
+            movies = updatedMovies,
+            filteredMovies = filterMovies(updatedMovies, state.searchQuery)
+        )
     }
 
     fun updateSearchQuery(query: String) {
@@ -127,5 +154,12 @@ class MoviesViewModel @Inject constructor(
                 movie.title.contains(query, ignoreCase = true)
             }
         }
+    }
+
+    // cleaning any pending jobs when ViewModel is cleared
+    override fun onCleared() {
+        super.onCleared()
+        activeFavoriteJobs.values.forEach { it.cancel() }
+        activeFavoriteJobs.clear()
     }
 }
