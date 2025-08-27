@@ -11,6 +11,7 @@ import com.example.moviesapi.domain.use_case.GetMoviesUseCase
 import com.example.moviesapi.domain.use_case.UpdateFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -29,6 +30,7 @@ class MoviesViewModel @Inject constructor(
 
     private val activeFavoriteJobs = mutableMapOf<Int, Job>()
 
+    private var searchJob: Job? = null
 
     val selectedMovie: MoviesDomain?
         get() = _selectedMovieId?.let { id ->
@@ -133,10 +135,15 @@ class MoviesViewModel @Inject constructor(
     }
 
     fun updateSearchQuery(query: String) {
-        state = state.copy(
-            searchQuery = query,
-            filteredMovies = filterMovies(state.movies, query)
-        )
+        state = state.copy(searchQuery = query)
+
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(700)
+            state = state.copy(
+                filteredMovies = filterMovies(state.movies, query)
+            )
+        }
     }
 
     fun clearSearch() {
