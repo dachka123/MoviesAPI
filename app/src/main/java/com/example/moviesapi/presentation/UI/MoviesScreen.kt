@@ -96,11 +96,14 @@ fun MoviesScreen(
 
                 state.error.isNotEmpty() && state.movies.isEmpty() -> {
                     item {
-                        ErrorScreen(
-                            onClick = {
-                                viewModel.refreshMovies()
-                            }
-                        )
+                        Box(
+                            modifier = Modifier.fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            ErrorScreen(
+                                onClick = { viewModel.refreshMovies() }
+                            )
+                        }
                     }
                 }
 

@@ -32,11 +32,6 @@ class MoviesViewModel @Inject constructor(
 
     private var searchJob: Job? = null
 
-    val selectedMovie: MoviesDomain?
-        get() = _selectedMovieId?.let { id ->
-            state.movies.find { it.id == id }
-        }
-
     fun selectMovie(movie: MoviesDomain) {
         _selectedMovieId = movie.id
     }
